@@ -1,0 +1,24 @@
+Q1. Brady's patch removed the line "case_long_iso_time_style:" because it was
+duplicate code that would have been caught by the switch statement. It was not
+necessary to take it out, but it makes the code cleaner and easier to
+understand. 
+
+Q2. If we adopt the patched version of Coreutils, we would still need to watch
+out for problems with users from other countries who may not be accustomed to
+the "traditional" date format. The abbreviations used for months may not be
+clear, so more confusion could arise. 
+
+Q3. When the script is invoked on an empty file like /dev/null:
+    python randline.py /dev/null
+    we get a "IndexError: list index out of range" since there are no lines in
+    the list. 
+
+Q4. If we run the script is invoked with Python 3 rather than Python 2, then we
+    get complaints about the syntax instead, since the two version of Python
+    have different conventions/syntax.
+    The error is as follows:
+    
+    File "randline.py", line 65
+    except IOError as (errno, strerror):
+                      ^
+    SyntaxError: invalid syntax

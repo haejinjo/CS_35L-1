@@ -1,0 +1,43 @@
+#!/bin/bash
+
+# takes HTML from standard input
+# write sorted list of unique words to standard output
+
+# extract the lines with English and Hawaiian words
+grep "<\(td\)>.\+</td>" |
+
+# delete English words -- odd lines
+sed -n '1~2!p' |
+
+# delete the leading <td> in each line
+sed  's/^\(\s*<td>\)//' |
+
+# delete trailing </td> in each line
+sed 's/\(<\/td>\)$//' |
+
+# delete the <u>'s and </u>'s
+sed 's/<u>//g' | sed "s/<\/u>//g" |
+
+# delete remaining html -- <small> and <font size>
+sed "s/<\/u>//g" | sed "s/<.*>\(.*\)<\/.*>/\1/" |
+
+# convert all uppercase letters to lowercase
+tr '[A-Z]' '[a-z]' |
+
+# change ` to '
+tr "\`" "\'" |
+
+# separate word separated by comma with a new line
+sed 's/, /\n/'|
+
+# take off trailing white space/punctuation
+sed 's/[ ]*$//' |
+
+# separate word separated by space with new line
+sed 's/ /\n/g' |
+
+# valid hawaiian letters: p k ' m n w l h a e i o u
+sed "/[^pk'mnwlhaeiou]/d" |
+
+# sort the unique words
+sort -u

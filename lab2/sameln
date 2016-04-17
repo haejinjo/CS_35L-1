@@ -1,0 +1,99 @@
+#!/bin/bash
+ 
+
+dir=$1
+#cd "$dir"
+
+# find all files with leading dots in the current directory
+dots_files=`ls -a $dir | grep '^\.\+[^\.]' | sort`
+
+# all other files come after files with leading dots
+other_files=`ls $dir | sort`
+
+# combine dot files and other files into a single array
+declare -a ALL_FILES
+let count=0
+
+# iterate through dots_files
+# if file is regular, add to ALL_FILES
+IFS=$'\n' # solves problems when file has spaces
+let i=0
+for FILE in $dots_files
+do
+    # echo "Filename is: $FILE"
+    # echo "iteration $i."
+    if [ ! -L "$dir/$FILE" ]
+    then	
+	if [ -f "$dir/$FILE" ]
+	then
+	    # echo "REGULAR DOT FILE ENCOUNTERED"
+	    ALL_FILES[$i]="$dir/$FILE"
+	    let i=i+1
+	fi
+    fi
+done
+
+# iterate through other_files
+# if file is regular, add to ALL_FILES
+IFS=$'\n' # solves problems when file has spaces
+for FILE in $other_files
+do
+    # echo "iteration $i file: $FILE"
+    if [ ! -L "$dir/$FILE" ]
+    then
+	if [ -f "$dir/$FILE" ]
+	then
+	    ALL_FILES[$i]="$dir/$FILE"
+	    let i=i+1
+	fi
+    fi
+done
+
+let count=i
+# count holds the number of total regular files
+# ALL_FILES now contains all regular files
+
+# echo "ALL_FILES contains $count regular files."
+
+# iterate through array of regular files
+# starting from first file
+# if readable, compare every other file to this file
+# if duplicate, then hardlink the duplicate to the ith file
+# if not readable, do nothing and keep the file
+
+let i=0
+while [ $i -lt $count ]
+do
+    if [ -r "${ALL_FILES[$i]}" ] # check for readable
+    then
+        # use this as base for comparison
+	# iterate through other files
+	let next=$i+1
+	while [ $next -lt $count ]
+	do
+	    # compare files: 0 if same
+	    cmp -s -- "${ALL_FILES[$i]}" "${ALL_FILES[$next]}"
+	    if [ $? -eq 0 ]
+	    then
+		# hard link "next" element to "i-th" element
+		#echo "attempt hard link"
+		#echo "make hard link from ${ALL_FILES[$next]} to file: ${ALL_FILES[$i]}"
+		ln -f -- "${ALL_FILES[$i]}" "${ALL_FILES[$next]}"
+	    fi
+	    let next=next+1
+	done
+    else
+	# not readable, go to next file
+	echo "file not readable"
+    fi
+    # increment i
+    let i=i+1
+done
+
+
+# testing purposes
+#for file in "${ALL_FILES[@]}"
+#do
+#    echo "file is: $file"
+#done
+

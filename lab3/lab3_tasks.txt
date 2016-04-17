@@ -1,0 +1,27 @@
+CS 35L Lab 3
+- build application containing shell script that invokes ls command to get file status
+- uses ls implementation supplied by Coreutils 7.6
+- problem: ls command generates different output for different users (different locales)
+- users want traditioal Unix format: 
+	- Month Day Year (Mar 2 2009)
+
+
+Homework 3 Python
+- write script comm.py in style of randline.py
+- implement the `comm` command
+	- support all options and operands required by POSIX
+	- support all environment variables required by POSIX
+	- diagnostics?
+	- report an error if given wrong number of input operands
+	- support an extra option -u which allows `comm` to work even if its inputs are not
+	  sorted
+	- output lines should appear in the same order as input lines
+	- output according to the first input file's order
+		- lines that appear only in the second input file should appear after all
+		  other lines
+	- implementation should use lcoale and string modules and modules that randline.py
+ 	  already uses
+		- change usage message to accurately describe modified behavior
+	- Port comm.py implementation to Python 3 - as few changes as possible
+
+

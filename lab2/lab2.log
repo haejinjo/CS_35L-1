@@ -1,0 +1,123 @@
+1. I changed the locale by executing the command export LC_ALL='C'
+2. I created a file from the words file, using the command: 
+   cat /usr/share/dict/words | sort > words
+3. I took the HTML in the assgnment page with the wget command.
+4. I ran the tr commands and ran the specified commands. The differences between
+   the commands are as follows:
+   
+   tr -c 'A-Za-z' '[\n*]'
+   a) The first command replaces all characters that are not capital or
+      lowercase letters with a space with new lines. The number of new lines is
+      dependent on how many non-letters there are. 
+
+   tr -cs 'A-Za-z' '[\n*]'
+   b) The second command does the same translation as the first command, but the
+      added command -s squeezes the repeats, which means translations that
+      involve many new lines only create a single new line.  
+   
+   tr -cs 'A-Za-z' '[\n*]' | sort   
+   c) This command sorts the lines of text that were outputted.
+   
+   tr -cs 'A-Za-z' '[\n*]' | sort -u
+   d) This command does the same as the one in c), so it sorts the output, but
+      the -u option restricts the output to only the unique values found.
+   
+   tr -cs 'A-Za-z' '[\n*]' | sort -u | comm - words
+   e) The command compares the sorted files assign2.html and words line by
+      line. The first column contains words unique to assign2.html, the second
+      column contains words unique to words, and the third column contains words
+      that occur in both assign2.html and words.
+   
+   tr -cs 'A-Za-z' '[\n*]' | sort -u | comm -23 - words
+   f) This command does the same as the one in e) but it the option -23
+      suppresses the second and third columnsm, so it only shows words unique to
+      assign2.html.
+
+4. Then, I wrote a script that could identify Hawaiian words, which I then used
+   as words for a Hawaiian dictionary. I systematically extracted words from the
+   given source of Hawaiian words. By modifiying some of the commands from
+   before, I tested my spell checker on the assignment page. 
+
+   The buildwords script, along with comments explaning the purpose of each
+   regular expression, is as follows:
+
+#!/bin/bash
+
+# takes HTML from standard input
+# write sorted list of unique words to standard output
+
+# extract the lines with English and Hawaiian words
+grep "<\(td\)>.\+</td>" |
+
+# delete English words -- odd lines
+sed -n '1~2!p' |
+
+# delete the leading <td> in each line
+sed  's/^\(\s*<td>\)//' |
+
+# delete trailing </td> in each line
+sed 's/\(<\/td>\)$//' |
+
+# delete the <u>'s and </u>'s
+sed 's/<u>//g' | sed "s/<\/u>//g" |
+
+# delete remaining html -- <small> and <font size>
+sed "s/<\/u>//g" | sed "s/<.*>\(.*\)<\/.*>/\1/" |
+
+# convert all uppercase letters to lowercase
+tr '[A-Z]' '[a-z]' |
+
+# change ` to '
+tr "\`" "\'" |
+
+# separate word separated by comma with a new line
+sed 's/, /\n/'|
+
+# take off trailing white space/punctuation
+sed 's/[ ]*$//' |
+
+# separate word separated by space with new line
+sed 's/ /\n/g' |
+
+# valid hawaiian letters: p k ' m n w l h a e i o u
+sed "/[^pk'mnwlhaeiou]/d" |
+
+# sort the unique words
+sort -u
+
+
+5. To my knowledge, the script has no bugs. Upon running the both the English
+   and Hawaiian spell checker on the assignment page, I found that there were
+   406 spelling mistakes according to hwords, the Hawaiian dictionary, and 39
+   mispelled words according to words, the English dictionary. The commands I
+   used were:
+
+     cat assign2.html | tr 'A-Z' 'a-z' | tr -cs 'A-Za-z' '[\n*]' | sort -u |
+     comm -23 - hwords | wc
+
+     cat assign2.html | tr -cs 'A-Za-z' '[\n*]' | tr 'A-Z' 'a-z' | sort -u |
+     comm -23 - words | wc
+     
+    To check my work, I also spell-checked the hwords file I created with
+    itself. As expected, I found no mistakes, which makes sense because a line
+    by line comparison with itself should result in no discrepancies. I ran
+    this command:
+
+     cat hwords | tr -cs 'A-Za-z' '[\n*]' | sort -u | comm -23 - hwords | wc
+
+
+6. I saved the spell check results from each dictionary and spell checked the
+   results with the other dictionary to find that:
+
+   Some words that are "misspelled" as Hawaiian but not as English are
+   	"tables"
+   	"that" 
+   	"so"
+	"see"
+   Some words that are "misspelled" as English but not as Hawaiian are
+   	"halau"
+	"lau"
+	"wiki"  
+
+
+

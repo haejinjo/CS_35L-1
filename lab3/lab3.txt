@@ -1,0 +1,102 @@
+### lab3.txt
+
+# I used my own linux machine for the lab, files may be different than from
+  those on machines on linux server
+
+1. I first grabbed Coreutils 7.6 by using the wget command:
+   wget "ftp://ftp.gnu.org/gnu/coreutils/coreutils-7.6.tar.gz"
+2. unzip the .tar.gz file using the tar command:
+   tar -xzvf coreutils-7.6.tar.gz
+3. I made a temporary directory in the home directory to store Coreutils
+   mkdir ~/coreutilsInstall
+4. I then went into the coreutils-7.6 directory and read the INSTALL file to get
+   figure out how to compile and install coreutils-7.6
+5. I ran configure and changed where the coreutils would be installed
+   ./configure --prefix=/home/eric/coreutilsInstall
+   Note that per the INSTALL file's instructions, the prefix must be an absolute
+   path.
+   I compiled coreutils by using: make
+   I installed coreutils by using: make install
+   coreutils was then installed into the directory I initially made.
+6. I then tested the unmodified version of the ls command
+   /home/eric/coreutilsInstall/bin/ls -l
+   Some of the output is as follows: 
+
+   -rwxr-xr-x 1 eric users 149333 2016-04-14 12:35 wc
+   -rwxr-xr-x 1 eric users 211177 2016-04-14 12:35 who
+   -rwxr-xr-x 1 eric users  93488 2016-04-14 12:35 whoami
+   -rwxr-xr-x 1 eric users  92050 2016-04-14 12:35 yes
+
+   I found that the problem with the date format was there, as seen in the
+   output above.
+7. I copied the patch file's contents into a new file I created called
+   patch_file
+8. I applied the patch by using the command:
+   patch -p1 < patch_file
+   I used the option -p1 because I created my patchfile in the coreutils-7.6
+   directory, and the ls.c file was at src/ls.c so to get the patch file to
+   match this, I stripped off the a/ that preceded src/ls.c
+9. In the coreutils-7.6 directory, I then built the fixed version (without
+   installing it) using:
+   make
+   The commands that were outputted are as follows:
+
+   make  all-recursive
+   Making all in lib
+   make  all-recursive
+   Making all in src
+   make  all-am
+
+       CC     ls.o
+       CCLD   dir
+       CCLD   vdir
+       CCLD   ls
+
+   Making all in man
+
+       GEN    dir.1
+       GEN    vdir.1
+       GEN    ls.1
+
+   Making all in po
+   Making all in tests
+   Making all in gnulib-tests
+   make  all-recursive
+
+
+   Since we only altered the ls.c file, commands that were made pertaining to
+   other files are not needed, so the only ones we needed are ones deal with ls.
+
+10. To test if it works, I ran the command:
+    /home/eric/CS/CS35L/lab3/coreutils-7.6/src/ls -l
+    
+    Some of the output is as follows:
+    -rw-r--r-- 1 eric users  21907 Sep  1  2009 who.c
+    -rw-r--r-- 1 eric users  88760 Apr 14 12:35 who.o
+    -rw-r--r-- 1 eric users      0 Apr 14  2015 year_old_file
+    -rwxr-xr-x 1 eric users  92050 Apr 14 12:35 yes
+    -rw-r--r-- 1 eric users   2458 Sep  1  2009 yes.c
+    -rw-r--r-- 1 eric users  18984 Apr 14 12:35 yes.o
+
+    Then I ran it on a file recently created and a file that was a year old.
+    touch -t 201504140000 year_old_file
+    touch recent_file
+
+    The command does work and the date shown for the files were:
+    -rw-r--r-- 1 eric users      0 Apr 14  2015 year_old_file
+    -rw-r--r-- 1 eric users      0 Apr 14 13:41 recent_file
+    
+    When I ran the command on a recent file, a more specific time was shown,
+    while when running the command on a year-old file, I only saw the date and
+    year of the file. 
+
+    Note that the old version of ls in the temporary folder still does not
+    works since I did not overwrite the old one.
+    If I issue the command:
+    /home/eric/coreutilsInstall/bin/ls -l
+
+    The output still gives dates in the format of YYYY-MM-DD
+
+    -rw-r--r--  1 eric users       0 2016-04-07 14:44 web
+    -rw-r-----  1 eric users 4953680 2016-04-07 14:39 words
+    drwxrwxr-x  5 eric eric     4096 2015-06-17 14:03 work
