@@ -1,0 +1,118 @@
+
+### lab4.txt
+### Eric Chuu
+### 604406828
+
+1. I first made a directory 'gitroot' and got a copy of the Diffutils Git
+   repository with the commands:
+   mkdir gitroot
+   cd gitroot
+   git clone git://git.savannah.gnu.org/diffutils.git
+2. I went into diffutils and looked at the log and put it into a text file
+   cd diffutils
+   git log > git-log.txt
+3.  Then I looked at the tags and store them into another text file
+    git tag > git-tags.txt
+4. I looked for the commit entitled "maint: quote 'like this' or "like this",
+   not `like this'"
+   I first looked in the file to make sure the commit was there, using:
+   cat git-log.txt | grep "maint:quote"
+   This gave me 1 match, and then I went directly into the git-log.txt file and
+   found the hash id for the commit and copied and pasted it so that I could
+   generate a patch for that commit and put it into another text file
+   git format-patch -1 --stdout 62ca21c8c1a5aa3488589dcb191a4ef04ae9ed4f > quote
+   -patch.txt
+   I used format-patch with the -1 option so that I only got the patch referred
+   to by the hash id and then redirected the output into the quote-patch.txt
+   file.
+
+5. I checked out version 3.0 of Diffutils using the checkout command:
+   git checkout "v3.0"
+   This resulted in a few messages:
+   Note: checking out 'v3.0'.
+
+   You are in 'detached HEAD' state. You can look around, make experimental
+   changes and commit them, and you can discard any commits you make in this
+   state without impacting any branches by performing another checkout.
+
+   If you want to create a new branch to retain commits you create, you may
+   do so (now or later) by using -b with the checkout command again. Example:
+
+     git checkout -b new_branch_name
+
+   HEAD is now at 022cd5c... version 3.0
+6. I then applied the patch with:
+   patch -p1 < quote-patch.txt
+   I used the -p1 option to take off the words preceiding the first slash in the
+   text file. I was asked to skip patches three times. In addition, there were
+   some hunks that failed.
+7. I then used took a look at what happened during the patch using: git status
+   This gave me a list of the modified files, followed by a list of untracked
+   files. 
+8. I reverted the changes in the files other than the .c files by opening them
+   in emacs and used the command: C-x v = C-x v u
+   I then went into the .c files and undid changes other than changes to
+   character string constants. I did this by using the command: C-x v =
+   which opened up the diff file, which I went through and reverted changes that
+   were comments and not part of the code that changed the characters string
+   quotes. I used the command: C-c C-a
+   and saved the reverted changes at the end of each file.
+9. I manually went into the src/*.c.rej files and copy rejected patches into the
+   .c files that required the changes necessary. I pulled up the two files side
+   by side and copied the required patches into the original .c file.
+10. I then removed all untracked files that git status warns about, using the
+    commands: 
+    git clean -n
+    git clean -f
+    The second command removed all of the untracked files. 
+
+11. I used the command: git status
+    to make sure I had only modified files remaining. As specified
+    by the spec, there were 6 modified files left:
+    
+    src/comp.c
+    src/diff.c
+    src/diff3.c
+    src/dir.c
+    src/sdiff.c
+    src/util.c    
+    
+    Then I checked the output of the patch file:
+    git diff | wc
+    showed that the patch was 335 lines long, which is consistent with the spec
+
+    Then I put the patch into a text file:
+    git diff > quote-3.0-patch.txt
+
+12. I ran the following commands to build the modified version of Diffutils
+    ./bootstrap
+    ./configure
+    make
+    make check
+    There were some errors from the make check command, but we ignore these per
+    the spec.
+
+    I then verfiied that the modified diff actually works differently. I used
+    the command: diff . -
+    to which I received the message:
+    diff: cannot compare '-' to a directory
+    which indeed shows the changes I made.
+
+    I tested it again by using the help option:
+    diff --help
+    to which I looked through the output and saw that the proper quotes were
+    being used. I recognized the patches I had to apply by hand as well.
+
+13. I created two separate directories to store the two different versions of
+    Diffutils.
+    cp -r diffutils diffutils-3.0
+    cp -r diffutils diffutils-3.0-patch
+    I then went into the diffutils-3.0 and changed the version by checking out:
+    git checkout "v3.0"
+
+14. I used diff to compare the contexts of quote-3.0-test.txt and
+    quote-3.0-patch.txt and saw that the files were not identical, which is
+    expected since I made changes. These differences were not innocuous since
+    they had to do with the output and display of certain characters.
+
+    
