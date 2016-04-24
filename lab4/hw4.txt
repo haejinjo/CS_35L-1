@@ -1,0 +1,64 @@
+### hw4.txt
+### Eric Chuu
+### 604406828
+
+1.    I created a hw4.txt to log actions for this homework
+
+2.    I went into the diffutils repository and checked out
+      version 3.0 of Diffutils from my repository into a new branch
+      called  "quote" git checkout v3.0 -f -b quote
+
+3.    I then installed my change into the new branch. I used my
+      quote-3.0-patch.txt as the input:
+      patch -p1 < quote-3.0-patch.txt
+
+4,5. I used the add-change-log-entry-other-window Emacs function by
+     first opening emacs and using the command: C-x 4 a
+
+     I opened each of the six  modified .c files and added entries to
+     the ChangeLog for the following files.
+     
+     emacs src/cmp.c
+     emacs src/diff.c
+     emacs src/diff3.c
+     emacs src/dir.c
+     emacs src/sdiff.c
+     emacs src/util.c
+
+6.   I then added all changes by adding them to git and commiting the
+     changes:
+     git add src/cmp.c src/diff.c src/diff.c src/dir.c src/sdiff.c src/util.c
+     git commit -F ChangeLog
+
+7.   Then I generated a file formatted-patch.txt:
+     git format-patch -1 --stdout > formatted-patch.txt
+
+8.   I then sent my patch to my partner (Anthony Xue, 304643096).
+     In order to use his, I first checked out version 3.0 again into a
+     temporary branch called partner:
+     git checkout v3.0 -f -b partner
+
+     I then applied his patch using:
+     git am < anthony-patch.txt
+     The output was:
+     Applying: 2016-04-23 Anthony Kuangyi Xue
+     <kuangyi@lnxsrv01.seas.ucla.edu>
+
+     Then I rebuilt using the commands:
+     ./bootstrap
+     ./configure
+     make
+     make check
+
+9.   I verified that the ChangeLog entry works by running:
+     make distdir
+     cd diffutils*
+     emacs ChangeLog
+
+     I saw that the ChangeLog entry was there and the patch notes
+     reflected the ones that my partner had written.
+
+10.  I went into the directory ~eggert/src/gnu/emacs and ran the
+     command gitk on it
+     cd ~eggert/src/gnu/emacs
+     gitk
