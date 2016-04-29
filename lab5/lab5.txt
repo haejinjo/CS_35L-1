@@ -1,0 +1,111 @@
+### lab5.txt
+### Eric Chuu
+### 604406828
+
+
+1. I used the wget command to download the old stable version of
+   coreutils, unzipped it, and tried building it. I used the commands:
+   tar xzf coreutils-with-bug.tar.gz
+   I then went into the core-utils-with-bug directory:
+   ./configure
+   make
+   When I ran configure, there were no problems, but when I ran the
+   command make, it failed.
+
+2. I then downloaded the patch given to us.
+   wget http://web.cs.ucla.edu/classes/spring16/cs35L/assign/coreutils.diff
+   Then I applied the patch:
+   patch -p0 < coreutils.diff
+   which gave the following output:
+   patching file lib/utimens.c
+   patching file lib/utimens.h
+   patching file src/copy.c
+   patching file src/tee.c
+   patching file src/touch.c
+
+   I tried making the file again, and this time I was able to build
+   everything with no problems. The patch fixed it because the patch
+   renamed the functions and added 'coreutils_' before the function
+   names, which were causing problems with the build previously.
+
+3. Now I had to reproduce the bug. I created a tmp directory and
+   created the three files as shown in the spec.
+   touch -d '1918-11-11 11:00 GMT' wwi-armistice
+   touch now
+   sleep 1
+   touch now1
+   TZ=UTCO ~/lab5/coreutils-with-bug/src/ls -lt --full-time
+
+   We see that the wwi-armistice file is shown above the two other
+   files, which clearly were created afterwards. Thus, I have
+   successfully recreated the bug.
+
+-rw-r--r-- 1 classech class 0 1918-11-11 11:00:00.000000000 +0000 wwi-armistice
+-rw-r--r-- 1 classech class 0 2016-04-28 19:28:46.218160027 +0000 now1
+-rw-r--r-- 1 classech class 0 2016-04-28 19:28:40.883019796 +0000 now
+
+
+
+4. I next used gdb to debug and figure out what was causing the
+   problem. I went into the src directory and opened the ls.c file to
+   first look through the code to find somewhere to start. Since there
+   was a problem with the way the files were outputted, I figured that
+   the the sort_files function might have some issues. To see what was
+   going on when this function is called, I put a couple breakpoints at
+   in sort_files by using the following command in gdb.
+   b sort_files
+   b compare_mtime
+   run -lt
+
+   Once I hit the breakpoint at sort_files, I single-stepped through
+   the program to try to find the problem. I traced the code to the
+   function call compare_mtime to timespec_cmp to get_stat_mtime and
+   finally to timespec_cmp, where I saw that there was a difference
+   being calculated:
+
+   int diff = a.tv_sec - b.tv_sec;
+
+   I printed out the values of the difference. The first value was a
+   large negative number and the second value was a large positive
+   number, so we would expect diff to be negative. However, when I
+   printed out the value of diff, I got a large positive number, so
+   it's clear that overflow has occurred. The output is as follows:
+
+   (gdb) p a.tv_sec
+   $70 = -1613826000
+   (gdb) p b.tv_sec
+   $71 = 1461898912
+   (gdb) p diff
+   $72 = 1219242384
+
+
+   During the step through of the program, gdb showed that the
+   timespec_cmp function was in ../lib/timespec.h so I opened
+   timespec.h file in emacs and looked through the implementation.
+
+   I looked at the timespec_cmp function and saw that it returned
+   negative, zero, or positive depending on the integer comparisons of
+   the arguments passed in. However, large positive integers can
+   overflow and end up being stored as negative numbers, which would
+   make the comparisons inaccurate and result in unexpected sorting of
+   the files. We can replace this implementation by using signed long
+   long int instead of a regular int so that we can store larger
+   positive integers and avoid overflow. Then I expanded out the
+   comparisons and returned -1, 0, or 1 based on which values were
+   larger. 
+
+   I then made a ChangeLog entry with the command:
+   C-x 4 a
+   
+   After building coreutils again with the changes I made in
+   timespec.h, I tested that my modifications actually fixed the
+   bug. I ran the command like before:
+
+   TZ=UTCO ~/lab5/coreutils-with-bug/src/ls -lt --full-time
+
+   and the output, displayed below, shows that the order of the files
+   is now correct, with the wwi-armistice file at the bottom of the list.
+
+-rw-r--r-- 1 classech class 0 2016-04-29 04:40:05.172492976 +0000 now1
+-rw-r--r-- 1 classech class 0 2016-04-29 04:39:59.737350350 +0000 now
+-rw-r--r-- 1 classech class 0 1918-11-11 11:00:00.000000000 +0000 wwi-armistice
