@@ -1,5 +1,5 @@
 --- timespec.h	2016-04-28 22:02:58.606579000 -0700
-+++ newtimespec.h	2016-04-28 21:35:18.218219000 -0700
++++ /u/eng/class/classech/lab5/coreutils/lib/timespec.h	2016-04-28 22:27:49.013448000 -0700
 @@ -45,8 +45,23 @@
  static inline int
  timespec_cmp (struct timespec a, struct timespec b)
