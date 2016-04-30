@@ -1,3 +1,9 @@
+2016-04-28  Eric Jason Chuu  <classech@lnxsrv07.seas.ucla.edu>
+
+	* timespec.h (timespec_cmp): Changed the ints to signed long long
+	ints to avoid overflow. Took the difference of these signed long
+	long ints and compared them to determine the return.
+
 --- timespec.h	2016-04-28 22:02:58.606579000 -0700
 +++ timespec.h	2016-04-28 22:27:49.013448000 -0700
 @@ -45,8 +45,23 @@

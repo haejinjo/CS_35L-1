@@ -7,7 +7,7 @@
    coreutils, unzipped it, and tried building it. I used the commands:
    tar xzf coreutils-with-bug.tar.gz
    I then went into the core-utils-with-bug directory:
-   ./configure
+   ./configure CFLAGS="-g -O0"
    make
    When I ran configure, there were no problems, but when I ran the
    command make, it failed.
@@ -97,6 +97,12 @@
    I then made a ChangeLog entry with the command:
    C-x 4 a
    
+   I used the diff -u command to create the patch file with a copy of
+   timespec.h file that I made:
+   diff -u oldtimespec.h timespec.h > lab5.diff
+
+   I then copied the ChangeLog Entry to the top of lab5.diff
+
    After building coreutils again with the changes I made in
    timespec.h, I tested that my modifications actually fixed the
    bug. I ran the command like before:
@@ -109,3 +115,21 @@
 -rw-r--r-- 1 classech class 0 2016-04-29 04:40:05.172492976 +0000 now1
 -rw-r--r-- 1 classech class 0 2016-04-29 04:39:59.737350350 +0000 now
 -rw-r--r-- 1 classech class 0 1918-11-11 11:00:00.000000000 +0000 wwi-armistice
+
+5. I then tried to reproduce the problem in the home directory on the
+   SEASnet Linux servers, instead of using the $tmp directory. Upon
+   running the above test case, I got this ouput:
+
+-rw-r--r-- 1 classech class 0 2054-12-17 17:28:16.000000000 +0000 wwi-armistice
+-rw-r--r-- 1 classech class 0 2016-04-30 01:01:23.531841000 +0000 now1
+-rw-r--r-- 1 classech class 0 2016-04-30 01:01:18.452063000 +0000 now
+
+   which again shows wwi-armistice above the other two files when it
+   should be at the bottom. In addition, the year displayed is also
+   incorrect, 2054 instead of 1918. As discussed in class, this is
+   because the SEASnet serves are 64 bit and the files that we created
+   using touch are 32 bit. Thus, when the files are saved, there is
+   truncation and the bits that determine the sign are lost. This
+   causes large positive numbers to be stored as large negative
+   numbers, which causes problems with the dates when they are very
+   far in the past.
