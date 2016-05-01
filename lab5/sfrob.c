@@ -172,9 +172,14 @@ int main()
     // set next element of words to point to the start of the stored word
 
     int j;
+    char* arr_input_initial = arr_input;
     for (j = 0; j < numwords; j++)
     {
         words[j] = arr_input;
+        if (j+1 == numwords) // if last word then don't increment to next space
+        {
+            break;
+        }
         //printf("reached. \n");
         while ((*arr_input) != 32)
         {
@@ -214,8 +219,9 @@ int main()
     }
 
     // free up allocated memory
-    //free(arr_input); 
+
     free(words);
+    free(arr_input_initial);
 
     return 0;
 
