@@ -45,6 +45,13 @@ int frobcmp (char const *a, char const *b)
         return 0;
 }
 
+
+// separate compare function that is compatible with qsort
+int compare(void const *x, void const *y)
+{
+    return frobcmp( *((char**)x), *((char**)y) );
+}
+
 int main()
 {
     int init_allocate = 10; // initial allocation of memory
@@ -88,14 +95,26 @@ int main()
             //init_allocate = 2 * init_allocate;
         }
 
-        arr_input[i] = char_input; // store the char input
+        //arr_input[i] = char_input; // store the char input
         // check to see if we've completed a word
-        if (arr_input[i] == ' ')
+        if (char_input == ' ')
         {
-            numwords++;
+            if (i != 0)
+            {
+                if (arr_input[i-1] != ' ')
+                {
+                    numwords++;
+                    arr_input[i] = char_input;
+                    i++;
+                }
+            }
+        }
+        else
+        {
+            arr_input[i] = char_input;
+            i++;
         }
         char_input = getchar();
-        i++;
     }
 
     // Once we've hit the end of file, add a space to the end to match the 
@@ -129,9 +148,7 @@ int main()
     }
 
     // debugging purposes
-    printf("number of words: %d\n", numwords);
-    printf("hello\n");
-
+    //printf("number of words: %d\n", numwords);
 
     // pointers pointing to words read in 
     // use number of words read in to determine memory allocation
@@ -144,7 +161,7 @@ int main()
         exit(1);
     }
 
-    printf("Successfully Allocated memory for words pointer. \n");
+    //printf("Successfully Allocated memory for words pointer. \n");
 
 
     // iterate through the arr_input and have words point to beginning
@@ -158,7 +175,7 @@ int main()
     for (j = 0; j < numwords; j++)
     {
         words[j] = arr_input;
-        printf("reached. \n");
+        //printf("reached. \n");
         while ((*arr_input) != 32)
         {
             arr_input++; // increment until we find space
@@ -166,8 +183,12 @@ int main()
         arr_input++; // increment again to bring arr_input to next word
     }
 
-    printf("Checkpoint: Words pointer points to beginning of each word. \n");
+    //printf("Checkpoint: Words pointer points to beginning of each word. \n");
 
+    // sort words using qsort
+    // qsort(words, numwords, sizeof(char*), frobcmp);
+    // qsort with frobcmp does not work because of 'incompatible pointer type'
+    qsort(words, numwords, sizeof(char*), compare);
 
     // output words
     char* output_words;
@@ -189,9 +210,12 @@ int main()
     if (ferror(stdout))
     {
         fprintf(stderr, "Output Error -- putchar failed.");
+        exit(1);
     }
-    // free(arr_input); // free up allocated memory
 
+    // free up allocated memory
+    //free(arr_input); 
+    free(words);
 
     return 0;
 
