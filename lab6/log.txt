@@ -1,0 +1,19 @@
+### lab 6 log.txt
+### Eric Chuu
+### 604406828
+
+
+1. Server: generate public and private keys
+   - ssh-keygen
+2. create an accountf or client on the server
+   - sudo useradd -d /home/<homedir_name> -m <username>
+   - sudo passwd <username>
+3. Create .ssh directory for new user
+   - cd /home/<homedir_name>
+   - sudo mkdir .ssh
+   .ssh -> knwon_hosts, authorized_keys
+4. change ownership and permission on .ssh directory
+   - sudo chown -R username .ssh
+   - sudo chmod 700 .ssh
+   (700 read, write, execute for the user,
+    0 nothing for the others)
