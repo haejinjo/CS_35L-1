@@ -132,7 +132,7 @@ University of California, Los Angeles \\ % Your institution for the title page
 \begin{itemize}
 	 \item Lifetime tenure of the U.S. Supreme Court's justices
 	 \item People have vested interest in their decisions and deliberations
-	 \item Model the Supreme Court with machine learning to predict decisions
+	 \item Model the Supreme Court's decision-making process
 	 \item Identify which of the nine justices were likely to ``swing," or waver on certain issues
 \end{itemize}
 
@@ -220,7 +220,7 @@ Other observations: Top voter was Kennedy, decisions tended to cluster based on 
 \textbf{Text-Based Analysis}
 \begin{enumerate}
 	\item Two types: topic analysis and sentiment analysis
-	\item Using the two, the model uses historical opinion text to ``learn" and uses these to help classify the decisions when reading new opinion text
+	\item Model combined the two to use historical opinion text to ``learn" and classify the decisions when reading new opinion text
 	\item The model looked at: number of words, identifies key words that pertain to each issue, assigns a weight to each issue
 	\item Classification problem
 \end{enumerate}
@@ -235,6 +235,36 @@ Other observations: Top voter was Kennedy, decisions tended to cluster based on 
 
 
 \end{frame}
+
+
+
+%-----------------------------------------
+
+\begin{frame}
+\frametitle{Classification Example}
+\textbf{Before Classification}
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width=0.75\columnwidth]{pre_class}
+\end{center}
+\end{figure}
+
+\end{frame}
+
+%------------------------------------------
+
+\begin{frame}
+\frametitle{Classification Example}
+\textbf{After Classification}
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width=0.75\columnwidth]{post}
+\end{center}
+\end{figure}
+
+\end{frame}
+
 
 %------------------------------------------------
 
@@ -264,6 +294,8 @@ A model validation technique for assessing how the results of a statistical anal
 
 \end{frame}
 
+
+
 %------------------------------------------------
 
 \begin{frame}[fragile] % Need to use the fragile option when verbatim is used in the slide
@@ -287,6 +319,20 @@ A model validation technique for assessing how the results of a statistical anal
 
 \begin{itemize}
 	\item Text-based analysis becoming more flexible in application: election outcomes, customer feedback, etc.
+\end{itemize}
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width=0.8\columnwidth]{weather}
+\end{center}
+\end{figure}
+\end{frame}
+
+	
+\begin{frame}
+\frametitle{Conclusion}
+
+\begin{itemize}	
 	\item Machine Learning/AI advancements and improving techniques leading to increased insight into previously hidden processes
 	\item The model, if improved, can gauge in which direction the judicial system is headed: political, social, economic stances of the justices
 		\begin{itemize}
@@ -306,12 +352,16 @@ A model validation technique for assessing how the results of a statistical anal
 \footnotesize{
 \begin{thebibliography}{9}
 
+\bibitem{Fang} J. Fang, \emph{How Text Analytics Works},  Medallia
+
 \bibitem{supcourt}
 M. R. Islam, T. Hossain, S. Krishnan \emph{What AI can tell us about the U.S. Supreme Court}, The Conversation, 2016.
 
 \bibitem{lee} B. Pang, L. Lee, \emph{Opinion mining and sentiment analysis}, now the essence of knowledge, 2008
 
-\bibitem{Fang} J. Fang, \emph{How Text Analytics Works},  Medallia
+\bibitem{weather} T. Masterman, \emph{Hope for Human Sentiment Analysis Coding},  Dialogue Earth, May 13, 2011
+
+
 
 \end{thebibliography}
 
