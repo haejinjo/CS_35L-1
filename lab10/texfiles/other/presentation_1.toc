@@ -1,0 +1,9 @@
+\beamer@endinputifotherversion {3.24pt}
+\beamer@sectionintoc {1}{Background of the article}{3}{0}{1}
+\beamer@sectionintoc {2}{Model Details}{3}{0}{2}
+\beamer@sectionintoc {3}{AI, Machine Learning in the Model}{3}{0}{3}
+\beamer@subsectionintoc {3}{1}{Text-Based Analysis}{3}{0}{3}
+\beamer@subsectionintoc {3}{2}{Cross Validation}{3}{0}{3}
+\beamer@sectionintoc {4}{Future Considerations}{3}{0}{4}
+\beamer@subsectionintoc {4}{1}{Extended models}{3}{0}{4}
+\beamer@sectionintoc {5}{Conclusion}{3}{0}{5}
