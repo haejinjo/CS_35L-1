@@ -2,18 +2,80 @@
 ### Eric Chuu
 ### 604406828
 
+### SERVER ###
 
-1. Server: generate public and private keys
-   - ssh-keygen
-2. create an accountf or client on the server
-   - sudo useradd -d /home/<homedir_name> -m <username>
-   - sudo passwd <username>
-3. Create .ssh directory for new user
-   - cd /home/<homedir_name>
-   - sudo mkdir .ssh
-   .ssh -> knwon_hosts, authorized_keys
-4. change ownership and permission on .ssh directory
-   - sudo chown -R username .ssh
-   - sudo chmod 700 .ssh
-   (700 read, write, execute for the user,
-    0 nothing for the others)
+1. I first acted as the server. In Ubuntu, I made sure that openssh-server and
+   openssh-client were installed:
+   dpkg --get-selections | grep openssh
+   
+   The output is as follows:
+   openssh-client					install
+   openssh-server					install
+   openssh-sftp-server					install
+
+   indicating that openssh-server and openssh-client are indeed installed.
+   
+2. I generated public and private keys and saved to the default location:
+   ssh-keygen
+   I was prompted to enter a passphrase, so I did.
+
+3. I created an account for the client (my partner) and a password:
+   sudo useradd -d /home/axue1 -m axue1
+   sudo passwd axue1
+
+4. I cd'd into the directory I just made and created a .ssh directory
+   cd /home/axue1
+   sudo mkdir .ssh
+   
+   I checked to make sure that it was successfully created by using:
+   ls -a
+
+5. I changed ownership and permissions on the .ssh directory
+   sudo chown -R axue1 .ssh
+   sudo chmod 700 .ssh
+
+6. I used the command:
+   ifconfig
+   to get my ip address so that my partner could connect to my machine. Once he
+   connected, he opened Firefox, which opened the GUI on his machine. I verfied
+   this by running the command:
+   who
+   and I saw that he was connected to my machine and that his ip address matched
+   mine:
+   axue1    pts/15       2016-05-04 15:57 (10.97.85.159)
+
+   Then I checked the processes that were being run and searched for his
+   username:
+   ps -aux | grep axue1
+
+   And I saw that he was running Firefox:
+   axue1     2891 16.7  3.3 957496 202956 pts/15  Sl+  15:57   0:06
+   /usr/lib/firefox/firefox 
+
+### CLIENT ###
+   
+7.  We then reversed roles, and I acted as the Client.
+         
+8.  I generated public and private keys:
+    ssh-keygen
+    I was prompted to enter a passphrase. This time I left it blank, and I saved
+    them to the default location.
+
+9.  My partner then gave me the login information that he created, along with
+    the ip address. I then copied the public key to the server for key-based
+    authentication using the command:
+    ssh-copy-id -i echuu@169.232.121.139
+    I was asked if I wanted to continue connecting. I answered yes.
+
+10. I then added the private key to the authentication agent:
+    ssh-add
+
+11. Then I ssh'd into the server:
+    ssh -X echuu@169.232.121.139
+
+12. I ran firefox. My partner checked on his computer to see that I was indeed
+    running firefox on his machine. I ran also ran ifconfig and saw that his ip
+    addresss showed up. Connection success!
+    
+   
+
