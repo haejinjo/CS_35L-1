@@ -2,6 +2,8 @@
 ### Eric Chuu
 ### 604406828
 
+### Partner: Anthony Xue (304643096)
+
 ### SERVER ###
 
 1. I first acted as the server. In Ubuntu, I made sure that openssh-server and

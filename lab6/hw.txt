@@ -1,0 +1,43 @@
+### Assignment 6
+### hw.txt
+### Eric Chuu
+### 604406828
+
+
+1. Even if the other teams had been observing all the bytes going across the
+   network, the network would still be secure because the data is encrypted, so
+   the bytes going across the network would be meaningless to them without the
+   private key.
+   
+   (1) If we assume that the other teams had also tapped my keyboard and had
+   observed all our keystrokes, the network would still be secure because all
+   the data is encrypted and generated using the private key, so nothing in our
+   keystrokes would compromise any sensitive information. At best, the other
+   teams would have access to our public key, but without the private key, they
+   would not be able to decrypt the data. 
+
+   (2) If I'm booting off USB, and the other team gains physical access to the
+   USB, then the network would no longer be secure. The attacker would be able
+   to access the private key directly. With the private key, they would be able
+   to decrypt any of the data that we send between each other and the server,
+   even if it had been encrypted beforehand. The weaknesses of our setup would
+   be that we were careless enough to let other teams get physical access to the
+   USB that we were using to boot off of. Instead of booting off something that
+   is as easily misplaced as USB, we could devise a more secure way of keeping
+   the data secure that minimizes the chance of losing physical control of our
+   machines. 
+
+
+2. The gpg --verify command in the following instructions doesn't really verify
+   that I created the tar file in question because it only checks that the
+   signatures match. If one were to send a file to another person, an attacker
+   could that gains access to the file could make whatever changes he/she wants
+   and then sign the data accordingly and send it to the original
+   recipient. When the recipient uses gpg --verify, it will only check that that
+   upon decryption, the signatures match, and since the attacker had also signed
+   the data to accompany his changes, no red flags will be thrown because there
+   is indeed a match. Therefore gpg --verify cannot verify in confidence the
+   original sender of the file. 
+
+   One possible way I could go about fixing this problem is to
+   
