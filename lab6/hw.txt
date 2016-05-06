@@ -10,11 +10,16 @@
    private key.
    
    (1) If we assume that the other teams had also tapped my keyboard and had
-   observed all our keystrokes, the network would still be secure because all
-   the data is encrypted and generated using the private key, so nothing in our
-   keystrokes would compromise any sensitive information. At best, the other
-   teams would have access to our public key, but without the private key, they
-   would not be able to decrypt the data. 
+   observed all our keystrokes, the security of the network would depend on what
+   we were typing. If the other teams were able to get only our passphrase, then
+   the network would still be secure because they would still not have access to
+   the private key, so any data would remain encrypted. If we were typing the
+   private key, but we did not type the passphrase, then our network would still
+   be secure because they would not have the login information. However, if our
+   keystrokes contained both the passphrase and the private key, then the
+   security of the network would be compromised because they would have the
+   login information and the private key to decrypt all the encrypted
+   information.  
 
    (2) If I'm booting off USB, and the other team gains physical access to the
    USB, then the network would no longer be secure. The attacker would be able
@@ -39,5 +44,8 @@
    is indeed a match. Therefore gpg --verify cannot verify in confidence the
    original sender of the file. 
 
-   One possible way I could go about fixing this problem is to
+   One possible way we could address this problem would be to use a trusted
+   third party certificate-verfication system that can keep track of what is
+   being sent and received at any point in the process. This would then be able
+   to detect attacks that happen in the middle of the sending process.
    
