@@ -77,10 +77,10 @@ int main()
         exit(1);
     }
 
-    char** words;    // pointers pointing to words read in
-    char* arr_input; // store the inputted characters
-    char input;
-    ssize_t file_size;
+    char**   words;        // pointers pointing to words read in
+    char*    arr_input;    // store the inputted characters
+    char     input;        // store the chars being read in
+    ssize_t  file_size;
 
     ssize_t init_alloc = 10;
     if (S_ISREG(fileStat.st_mode))
@@ -103,18 +103,26 @@ int main()
     }
     
     long i = 0;
-    long word_count = 0; 
-    while(read(0, &input, 1) > 0) // read byte-by-byte
+    long word_count = 0;
+    ssize_t read_status;
+    read_status =  read(0, &input, 1);
+    if (read_status < 0)
     {
-        //printf("fuck\n");
-        //printf("%s\n", input);
-        if (input == ' ' && i != 0)
+        fprintf(stderr, "Error while reading file.");
+        exit(1);
+    }
+    while (read_status > 0) // read byte-by-byte
+    {
+        if (input == ' ')
         {
-            if (arr_input[i-1] != ' ')
+            if (i != 0)
             {
-                word_count++;
-                arr_input[i] = input;
-                i++;
+                if (arr_input[i - 1] != ' ')
+                {
+                    word_count++;
+                    arr_input[i] = input;
+                    i++;
+                }
             }
         }
         else
@@ -134,6 +142,8 @@ int main()
                 exit(1);
             }
         }
+
+        read_status = read(0, &input, 1);
     }
 
     // append space char at the end of file
@@ -143,15 +153,7 @@ int main()
         word_count++;
     }
 
-    // input error
-    if (ferror(stdin))
-    {
-        fprintf(stderr, "Input Error -- problem when reading from stdin.");
-        exit(1);
-    }
-
     words = (char**)malloc(sizeof(char*) * word_count);
-
     // check for memory allocation failure
     if (words == NULL)
     {
@@ -168,46 +170,41 @@ int main()
         {
             break;
         }
-        int blah = 0;
         while ((*arr_input) != 32)
         {
-            //blah++;
-            //printf("%d\n", blah);
             arr_input++; // increment until we find space
         }
         arr_input++; // increment again to bring arr_input to next word
     }
 
-    // sort words using qsort
-    // qsort(words, numwords, sizeof(char*), frobcmp);
-    // qsort with frobcmp does not work because of 'incompatible pointer type'
     qsort(words, word_count, sizeof(char*), compare);
 
-    // output words
     char* output_words;
     for (j = 0; j < word_count; j++)
     {
         output_words = words[j];
-        putchar(*output_words); // in case first letter is space
+        //putchar(*output_words);
+        if (write(1, output_words, 1) == 0)
+        {
+            fprintf(stderr, "Error -- Problem when writing output.");
+            exit(1);
+        }
         // iterate throgh output_words until end of word
         while (*output_words != 32)
         {
             output_words++; // next letter
-            putchar(*output_words);
+            //putchar(*output_words);
+            if (write(1, output_words, 1) == 0)
+            {
+                fprintf(stderr, "Error -- Problem when writing output.");
+                exit(1);
+            }
         }
 
     }
 
-
-    // output error message
-    if (ferror(stdout))
-    {
-        fprintf(stderr, "Output Error -- putchar failed.");
-        exit(1);
-    }
-
-    // free up allocated memory
-
+    // added implementation of number of comparisons:
+    fprintf(stderr, "Comparisons: %i\n", frobcmp_count);
     free(words);
     free(arr_input_initial);
 
