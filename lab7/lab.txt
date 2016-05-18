@@ -1,0 +1,189 @@
+### Assighnment 7
+### Lab 7
+### lab.txt
+### Eric Chuu
+### 604406828
+
+1. I wrote a C transliteration program tr2b.c that used the library functions
+getchar and putchar to transliterate bytes.
+
+The original tr command requires the command itself, along with two other
+strings, so for my main routine, I had two arguments, int argc, which was the
+number of arguments passed in, and char *argv[], which stored the arguments.
+
+I then checked to ensure that the correct number of arguments were passed in. If
+not, then I outputted an error message and exited. Next, I checked the lengths
+of the inputs to make sure that the strings passed in were the same
+length. Finally, I checked that the first string passed in did not have any
+duplicate elements.
+
+To translate the characters that were passed in to the program via stdin, the
+program first read input from stdin using the getchar() function, and I had a
+while loop that continued until the end of the file (EOF). During each
+iteration, the program would check for matches in the first string, from, with
+the input that was being read in. If there was a match, then I used the function
+putchar() to output the corresponding element from the 'to' string, which held
+the desired translated character. If there was no match, then I would simply
+output the character that was read in using putchar(). This iteration would
+continue until all the characters that were being read in had been
+evaluated. By using the getchar() and putchar() functions, I used library
+functions to increase the efficiency of the program and reduce the number of
+system calls. 
+
+
+2. I wrote a C program that used the system calls read and write to
+transliterate bytes. 
+
+Up until the translating portion, the tr2u.c program is identical to the tr2b.c
+program. For the translating portion, instead of using the library functions
+getchar() and putchar(), I used the read() and write() functions instead. To use
+these functions, I included the unistd.h library. I used the read() function to
+read in the input one byte at at time, specified by passing 1 to the nbyte
+argument. Like before, I itereated through the input, except the ending
+condition checked that the variable read_status was not zero, as a zero
+indicates that we've reached the end of the input. The same type of iteration
+and check for matching was used for this program, but when there was a match, I
+first set the translated character into the character to be outputted. Then I
+used the write() function, with the address of the character as the input. Since
+this program used system calls rather than library functions, it took longer to
+run.
+
+
+3. 
+(a) I used the strace command to compare the system calls issued by tr2b and
+tr2u when copying files to another file.
+
+
+strace -o buff_result.txt -c ./tr2b abc xyz < output.txt > buff_output.txt
+cat buff_result.txt
+
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ----------------
+ 48.85    0.000276           3        79           read
+ 24.42    0.000138           2        77           write
+  9.03    0.000051           6         9           mmap
+  4.78    0.000027           7         4           mprotect
+  3.54    0.000020           5         4           fstat
+  2.48    0.000014           7         2           open
+  1.77    0.000010          10         1           munmap
+  1.24    0.000007           4         2           close
+  1.24    0.000007           7         1         1 access
+  1.24    0.000007           7         1           execve
+  0.71    0.000004           4         1           brk
+  0.71    0.000004           4         1           arch_prctl
+------ ----------- ----------- --------- --------- ----------------
+100.00    0.000565                   182         1 total
+
+
+
+strace -o unbuff_result.txt -c ./tr2u abc xyz < output.txt > unbuff_output.txt
+cat unbuff_result.txt
+
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ----------------
+ 55.89    5.608597           1   5000000           write
+ 44.11    4.425873           1   5000002           read
+  0.00    0.000039           6         7           mmap
+  0.00    0.000026           7         4           mprotect
+  0.00    0.000014           7         2           open
+  0.00    0.000010          10         1           munmap
+  0.00    0.000008           4         2           fstat
+  0.00    0.000007           4         2           close
+  0.00    0.000007           7         1         1 access
+  0.00    0.000006           6         1           execve
+  0.00    0.000004           4         1           brk
+  0.00    0.000004           4         1           arch_prctl
+------ ----------- ----------- --------- --------- ----------------
+100.00   10.034595              10000024         1 total
+
+
+Comparing the number of system calls required by each program, we see that tr2b
+required 182 system calls, while tr2u required 10,000,024 system call, which
+clearly shows the efficiency of using library functions rather than system calls.
+
+(b) I used the command strace for compare system calls when copying a file to
+the terminal:
+
+strace -o buff_result1.txt -c ./tr2b abc xyz < output.txt
+cat buff_result1.txt
+
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ----------------
+ 97.77    0.017084           1     19899           write
+  1.32    0.000231           3        79           read
+  0.27    0.000048           5         9           mmap
+  0.15    0.000027           7         4           mprotect
+  0.14    0.000024          12         2           open
+  0.11    0.000019           5         4           fstat
+  0.06    0.000010          10         1           munmap
+  0.05    0.000008           4         2           close
+  0.04    0.000007           7         1         1 access
+  0.04    0.000007           7         1           execve
+  0.02    0.000004           4         1           brk
+  0.02    0.000004           4         1           arch_prctl
+------ ----------- ----------- --------- --------- ----------------
+100.00    0.017473                 20004         1 total
+
+
+strace -o unbuff_result1.txt -c ./tr2u abc xyz < output.txt
+cat unbuff_result1.txt
+
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ----------------
+ 59.87    6.586028           1   5000000           write
+ 40.13    4.414337           1   5000002           read
+  0.00    0.000040           6         7           mmap
+  0.00    0.000026           7         4           mprotect
+  0.00    0.000014           7         2           open
+  0.00    0.000010          10         1           munmap
+  0.00    0.000007           4         2           close
+  0.00    0.000007           4         2           fstat
+  0.00    0.000007           7         1         1 access
+  0.00    0.000006           6         1           execve
+  0.00    0.000004           4         1           brk
+  0.00    0.000004           4         1           arch_prctl
+------ ----------- ----------- --------- --------- ----------------
+100.00   11.000490              10000024         1 total
+
+
+
+Comparing the number of calls of each program, we see that tr2b made
+approximately 20,000 system calls, whereas tr2u made approximately 10,000,000
+system calls, so tr2b is still more efficient than tr2u.
+
+
+4. Next, I used the time command to measure how much faster the programs are
+compared to one another, when copying the same amount of data.
+
+ # buffered copying one file to another
+	 
+	 time ./tr2b abc ABC < output.txt > buff_result.txt
+
+	 real 0m0.296s
+	 user 0m0.223s
+	 sys 0m0.005s
+
+# unbuffered copying one file to another
+
+  	 time ./tr2u abc ABC < output.txt > unbuff_result.txt
+
+	 real 0m6.096s
+	 user 0m0.350s
+	 sys 0m5.677s
+
+# buffered copying file to terminal
+
+  	 time ./tr2b abc ABC < output.txt
+
+
+# unbuffered copying file to terminal
+
+  	 time ./tr2u abc ABC < output.txt
+	 
+
+The output of the time commands for each case is consistent with the results of
+the strace command. The time it takes for tr2b.c to complete execution is a lot
+shorter than for tr2u.c to complete execution. As mentioned before, this is
+because tr2b.c uses buffered I/O, which is more efficient when reading and
+writing data, while tr2u.c must make more system calls to accomplish the same
+task.

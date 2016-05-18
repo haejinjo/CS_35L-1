@@ -7,7 +7,7 @@
 
 // uses getchar and puchar to transliterate bytes
 // implementation using library functions
-
+/*
 void translate(char* from, char* to)
 {
     int in_char = getchar();    // reads input from stdin
@@ -34,7 +34,7 @@ void translate(char* from, char* to)
         match = 0; // reset match to 0
     }
 }
-
+*/
 
 
 int main(int argc, char *argv[])
@@ -74,8 +74,7 @@ int main(int argc, char *argv[])
     }
 
     // translate bytes
-    // translate(from, to);
-
+    
     int in_char = getchar();    // reads input from stdin
     int match = 0;              // check for matching byte in 'from'
     // iterate through the input and look for matches in 'from'
@@ -91,7 +90,7 @@ int main(int argc, char *argv[])
             }
         }
         if (match == 0)
-        {
+    	  {
             putchar(in_char); // no match => output the original byte read in
         }
         // regardless of match/no-match, read in next byte for next comparison
