@@ -1,0 +1,204 @@
+### HW7
+### sfrob.txt
+### Eric Chuu
+
+I wrote the program sfrobu, which was a rewritten version of the sfrob
+program. The sfrobu program used system calls, and at the end of the program, it
+outputs the number of comparisons done by the program. In order to measure and
+compare the performance between the sfrob and sfrobu programs, I used the time
+command while running the programs on inputs of varying nubers of input lines.
+
+The tested sfrob and sfrobu on files with: 9, 90, 900, 9000, and 90000
+lines. The text was the test case for Assignment 5. The commands and execution
+times for each case are as shown below:
+
+       	# 9 lines:
+	time ./sfrob < test_9.txt
+
+	real    0m0.002s
+	user    0m0.000s
+	sys     0m0.002s
+
+	time ./sfrobu < test_9.txt
+
+	Comparisons: 17
+	real    0m0.002s
+	user    0m0.001s
+	sys     0m0.001s
+
+	# 90 lines
+
+	time ./sfrob < test_90.txt
+
+	real    0m0.002s
+	user    0m0.000s
+	sys     0m0.001s
+
+	time ./sfrobu < test_90.txt
+
+	Comparisons: 459
+	real    0m0.002s
+	user    0m0.000s
+	sys     0m0.002s
+
+
+	# 900 lines
+
+	time ./sfrob < test_900.txt
+
+	real    0m0.002s
+	user    0m0.001s
+	sys     0m0.001s
+
+	time ./sfrobu < test_900.txt
+
+	Comparisons: 7372
+	real    0m0.007s
+	user    0m0.001s
+	sys     0m0.006s
+
+	# 9000 lines
+
+	time ./sfrob < test_9000.txt
+
+	real    0m0.010s
+	user    0m0.003s
+	sys     0m0.003s
+
+	time ./sfrobu < test_9000.txt
+
+	Comparisons: 101780
+	real    0m0.058s
+	user    0m0.006s
+	sys     0m0.050s
+
+
+	# 90000 lines
+
+	time ./sfrob < test_90000.txt
+	
+	real    0m0.063s
+	user    0m0.052s
+	sys     0m0.005s
+
+	time ./sfrobu < test_90000.txt
+
+	Comparisons: 1303920
+	real    0m0.604s
+	user    0m0.072s
+	sys     0m0.522s
+
+	
+
+As shown above, we clearly see that sfrob has faster execution time than does
+sfrobu. To better see this, we look at both the full execution time and the time
+spent in kernel mode as the number of lines vary. The results are tabluated
+below:
+	
+	Real:
+
+	# of of lines	sfrob		sfrobu	
+	9    		0m0.002s	0m0.002s
+	90		0m0.002s	0m0.002s
+	900		0m0.002s	0m0.007s
+      	9000		0m0.010s	0m0.058s
+	90000		0m0.063s	0m0.604s
+
+
+	Sys (Kernel):
+
+	# of of lines	sfrob		sfrobu	
+	9    		0m0.002s	0m0.001s
+	90		0m0.001s	0m0.002s
+	900		0m0.001s	0m0.006s
+      	9000		0m0.003s	0m0.050s
+	90000		0m0.005s	0m0.522s
+
+With files with fewer lines/words, the times are relatively similar, but we see
+that as the file size grows, the time it takes for the sfrobu program to
+execute grows a lot more quickly than does the sfrob program. This is also shown
+when we look at the time spent in kernel mode, which is again no surprise
+because sfrob uses library functions, which reduces the number of system calls.
+
+Next, we were asked to look at the number of comparisons as the the input varied
+in number of lines/words. The tabulated results are shown below:
+
+
+   	  # of words 	  # of comparisons
+	  9    		  17
+	  90		  459
+	  900		  7372
+	  9000		  101780
+	  90000		  1303920
+
+I used R to plot these data points, with the number of words running across the
+x-axis, and the number of comparisons along the y-axis. I then fitted a
+regression model, and looked at the summary of the model. The adjusted R-squared
+was 0.9994, so there is obviously a positive correlation between the number of
+words and number of comparisons. In fact, the number of comparisons grows by an
+order of nlogn, where n is the number of words, with perhaps another another
+constant. 
+
+Prediction:
+
+Number of comparisons = (# of words) * log(# of words)
+
+Note that this estimate is approximate, and there is likely another constant
+that can better define the relationship between the number of comparisons and
+the number of words, but this nlogn relationship is a general idea of how the
+the number of comparisons grows with respect to the number of words in the
+file.
+
+
+Finally, I created a bash script sfrobs that uses the standard tr and sort
+commands to sort encrypted files using a pipeline. I then used the time command
+to compare the overall performance of sfrobs with the other two programs. The
+results are as shown:
+
+
+	# 9 lines
+
+	time ./sfrobs < test_9.txt
+
+	real    0m0.010s
+	user    0m0.000s
+	sys     0m0.009s
+
+	# 90 lines
+
+	time ./sfrobs < test_90.txt
+
+	real    0m0.007s
+	user    0m0.002s
+	sys     0m0.007s
+
+	# 900 lines
+
+	time ./sfrobs < test_900.txt
+
+	real    0m0.006s
+	user    0m0.004s
+	sys     0m0.003s
+	
+	# 9000 lines
+
+	time ./sfrobs < test_9000.txt
+
+	real    0m0.012s
+	user    0m0.003s
+	sys     0m0.008s
+
+	# 90000 lines
+
+	time ./sfrobs < test_90000.txt
+
+	real    0m0.035s
+	user    0m0.025s
+	sys     0m0.013s
+
+
+Comparing the times, it appears as though the script sfrobs is comparable in
+execution time to sfrob. Both of them are considerably faster than sfrobu when
+it comes to large files. One difference between sfrobs and sfrob is that sfrobs
+spends more time in kernel mode than does sfrob, likely because I implemented
+sfrob using library functions which aids in minimizing the system calls.
