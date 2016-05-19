@@ -8,6 +8,84 @@ outputs the number of comparisons done by the program. In order to measure and
 compare the performance between the sfrob and sfrobu programs, I used the time
 command while running the programs on inputs of varying nubers of input lines.
 
+The tested sfrob and sfrobu on files with: 10, 100, 1000, 10000, and 1000000
+lines. The commands and execution times for each case are as shown below:
+
+       	# 10 lines:
+	time ./sfrob < 10_lines
+
+	real    0m0.002s
+	user    0m0.000s
+	sys     0m0.001s
+
+	time ./sfrobu < 10_lines
+
+	Comparisons: 113
+	real    0m0.002s
+	user    0m0.000s
+	sys     0m0.002s
+
+	# 100 lines
+
+	time ./sfrob < 100_lines
+
+	real    0m0.003s
+	user    0m0.000s
+	sys     0m0.002s
+
+	time ./sfrobu < 100_lines
+
+	Comparisons: 1918
+	real    0m0.004s
+	user    0m0.000s
+	sys     0m0.004s
+
+	# 1000 lines
+
+	time ./sfrob < 1000_lines
+
+	real    0m0.005s
+	user    0m0.002s
+	sys     0m0.002s
+
+	time ./sfrobu < 1000_lines
+
+	Comparisons: 27527
+	real    0m0.023s
+	user    0m0.002s
+	sys     0m0.020s
+
+	# 10000 lines
+
+	time ./sfrob < 10000_lines
+
+	real    0m0.099s
+	user    0m0.016s
+	sys     0m0.015s
+
+	time ./sfrobu < 10000_lines
+
+	Comparisons: 356784
+	real    0m0.213s
+	user    0m0.019s
+	sys     0m0.190s
+
+	# 100000 lines
+
+	time ./sfrob < 100000_lines
+
+	real    0m0.907s
+	user    0m0.182s
+	sys     0m0.113s
+
+	time ./sfrobu < 100000_lines
+
+	Comparisons: 4399619
+        real    0m2.233s
+	user    0m0.230s
+	sys     0m1.973s
+
+
 
 
 
