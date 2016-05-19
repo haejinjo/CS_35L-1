@@ -1,0 +1,15 @@
+### HW7
+### sfrob.txt
+### Eric Chuu
+
+I wrote the program sfrobu, which was a rewritten version of the sfrob
+program. The sfrobu program used system calls, and at the end of the program, it
+outputs the number of comparisons done by the program. In order to measure and
+compare the performance between the sfrob and sfrobu programs, I used the time
+command while running the programs on inputs of varying nubers of input lines.
+
+
+
+
+
+
