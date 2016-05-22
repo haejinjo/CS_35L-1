@@ -1,0 +1,62 @@
+### Lab 8
+### Eric Chuu
+### 604406828
+
+
+1. I first ran sort --version to make sure that I was using a new-enough version
+   of the sort command. I then generated a file containing 10,000,000 random
+   double-precision floating point numbers in text-form, one per line, with no
+   white space. I used the following command:
+
+   od -An -t f8 -N 80000000 < /dev/urandom | tr -s ' ' '\n' > random.txt
+
+   The options I used were:
+   -t f8 : double-precision floating point
+   -N    : format no more than 80000000 bytes of input
+   -An   : removes the addresses given by od command
+
+   I used the tr command with the option -s to put each floating point number on
+   a separate line, without any white space.
+
+2. I then used the time command to time to command sort -g on the data
+
+   time -p /usr/local/cs/bin/sort -g --parallel=N random.txt > /dev/null
+   
+   where N = number of threads
+
+   I timed the sort function as N, the number of levels of threading, varies for
+   N = 1, 2, 4, 8 threads, with the output sent to /dev/null. The results are
+   shown below:
+
+   # N = 1 thread
+   time -p /usr/local/cs/bin/sort -g --parallel=1 random.txt > /dev/null
+
+   real 179.61
+   user 179.37
+   sys 0.23
+
+   # N = 2 threads
+   time -p /usr/local/cs/bin/sort -g --parallel=2 random.txt > /dev/null
+
+   real 96.94
+   user 184.01
+   sys 0.38
+
+   # N = 4 threads
+   time -p /usr/local/cs/bin/sort -g --parallel=4 random.txt > /dev/null
+
+   real 63.36
+   user 209.03
+   sys 0.44
+
+   # 8 threads
+   time -p /usr/local/cs/bin/sort -g --parallel=8 random.txt > /dev/null
+
+   real 36.48
+   user 199.92
+   sys 0.58
+   
+   From the above time command outputs, we see that as increase the number of
+   threads, the faster the sort command completes execution. However, by
+   Amdahl's Law, this speedup is limited, so eventually the improvement in speed
+   will slow down as we get closer to the theoretical maximum speedup.   
