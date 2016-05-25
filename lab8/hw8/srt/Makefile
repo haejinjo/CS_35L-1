@@ -15,8 +15,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 CC = gcc
-CFLAGS = -std=gnu11 -g -O2 -Wall -Wextra -Wno-unused-parameter 
-LDLIBS = -lm -lpthread
+CFLAGS = -std=gnu11 -g -O2 -Wall -Wextra -Wno-unused-parameter
+LDLIBS = -lm
 
 all: srt
 
