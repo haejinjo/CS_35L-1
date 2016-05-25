@@ -1,0 +1,21 @@
+### original time with no multithreading
+
+rm -f *.o *.tmp 1-test.ppm 2-test.ppm 4-test.ppm 8-test.ppm srt srt.tgz
+gcc -std=gnu11 -g -O2 -Wall -Wextra -Wno-unused-parameter   -c -o main.o main.c
+gcc -std=gnu11 -g -O2 -Wall -Wextra -Wno-unused-parameter   -c -o raymath.o raymath.c
+gcc -std=gnu11 -g -O2 -Wall -Wextra -Wno-unused-parameter   -c -o shaders.o shaders.c
+gcc -std=gnu11 -g -O2 -Wall -Wextra -Wno-unused-parameter -o srt main.o raymath.o shaders.o -lm -lpthread
+time ./srt 1-test.ppm >1-test.ppm.tmp
+
+real    0m57.856s
+user    0m57.828s
+sys     0m0.023s
+mv 1-test.ppm.tmp 1-test.ppm
+time ./srt 2-test.ppm >2-test.ppm.tmp
+./srt: Multithreading is not supported yet.
+
+real    0m0.002s
+user    0m0.000s
+sys     0m0.001s
+Makefile:36: recipe for target '2-test.ppm' failed
+make: *** [2-test.ppm] Error 1
