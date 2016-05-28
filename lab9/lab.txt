@@ -593,9 +593,9 @@
 
    sed 's/ [=(].*$//' < ldd_out.txt | sort -u
 
-   where ldd_out.txt is the text file that contains the outpt from the ldd
-   function from all of the commands from above. I also used the C locale before
-   sorting. The output is as follows:
+   where ldd_out.txt is the text file that contains the output from the ldd
+   command called on the commands from above. I also made sure I was on the C
+   locale before sorting. The output is as follows:
 
         /lib64/ld-linux-x86-64.so.2
         libXau.so.6
