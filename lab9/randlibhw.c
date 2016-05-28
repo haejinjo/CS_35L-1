@@ -1,7 +1,7 @@
 //    randlibhw.c
 
-#include<randlib.h>
-#include<imintrin.h> // from randall.c
+#include"randlib.h"
+#include<immintrin.h> // from randall.c
 
 /*
     1. contain hardware implementation of random number generator
